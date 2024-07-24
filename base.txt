@@ -1,119 +1,586 @@
-USE [master]
+USE [avicultura]
 GO
-
-/****** Object:  Database [avicultura]    Script Date: 23/07/2024 07:03:29 p. m. ******/
-CREATE DATABASE [avicultura]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'avicultura_Data', FILENAME = N'c:\dzsqls\avicultura.mdf' , SIZE = 8192KB , MAXSIZE = 30720KB , FILEGROWTH = 22528KB )
- LOG ON 
-( NAME = N'avicultura_Logs', FILENAME = N'c:\dzsqls\avicultura.ldf' , SIZE = 8192KB , MAXSIZE = 30720KB , FILEGROWTH = 22528KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+/****** Object:  User [apolo_SQLLogin_1]    Script Date: 23/07/2024 07:11:28 p. m. ******/
+CREATE USER [apolo_SQLLogin_1] FOR LOGIN [apolo_SQLLogin_1] WITH DEFAULT_SCHEMA=[dbo]
 GO
-
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [avicultura].[dbo].[sp_fulltext_database] @action = 'enable'
+ALTER ROLE [db_owner] ADD MEMBER [apolo_SQLLogin_1]
+GO
+/****** Object:  Schema [apolo_SQLLogin_1]    Script Date: 23/07/2024 07:11:28 p. m. ******/
+CREATE SCHEMA [apolo_SQLLogin_1]
+GO
+/****** Object:  Table [dbo].[administrador]    Script Date: 23/07/2024 07:11:28 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[administrador](
+	[id_usuario] [int] NOT NULL,
+	[nombres] [varchar](50) NOT NULL,
+	[apellidos] [varchar](50) NOT NULL,
+	[edad] [int] NOT NULL,
+	[direccion] [varchar](75) NOT NULL,
+	[telefono] [varchar](10) NOT NULL,
+	[correo] [varchar](75) NOT NULL,
+	[contraseña] [nvarchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_usuario] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[avicultor]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[avicultor](
+	[id_usuario] [int] NOT NULL,
+	[nombres] [varchar](50) NOT NULL,
+	[apellidos] [varchar](50) NOT NULL,
+	[edad] [int] NOT NULL,
+	[id_admin] [int] NOT NULL,
+	[direccion] [varchar](75) NOT NULL,
+	[telefono] [varchar](10) NOT NULL,
+	[correo] [varchar](75) NOT NULL,
+	[contraseña] [varchar](100) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_usuario] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[gallinas]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[gallinas](
+	[codigo_gallina] [int] NOT NULL,
+	[raza] [varchar](30) NULL,
+	[edad] [int] NULL,
+	[numero_galpon] [int] NULL,
+	[huevos_diarios] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[codigo_gallina] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[galpones]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[galpones](
+	[numero_galpon] [int] NOT NULL,
+	[tipo_galpon] [varchar](30) NULL,
+	[huevos_diarios] [int] NULL,
+	[numero_gallinas] [int] NULL,
+	[alimento_diario] [varchar](40) NULL,
+	[que_alimento] [varchar](30) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[numero_galpon] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[maneja]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[maneja](
+	[Id_usuario] [int] NOT NULL,
+	[id_galpones] [int] NOT NULL,
+	[horas] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id_usuario] ASC,
+	[id_galpones] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[salud_gallinas]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[salud_gallinas](
+	[codigo_gallinas] [int] NULL,
+	[temp] [float] NULL,
+	[esta_enferma] [varchar](2) NULL,
+	[que_enfermedad] [varchar](30) NULL,
+	[medicamentos] [varchar](100) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[sensores]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[sensores](
+	[SensorID] [int] NOT NULL,
+	[SensorName] [varchar](50) NOT NULL,
+	[RangeMin] [int] NOT NULL,
+	[Rangemax] [int] NOT NULL,
+	[Rangeatype] [varchar](50) NOT NULL,
+	[ConectionType] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[avicultor]  WITH CHECK ADD FOREIGN KEY([id_admin])
+REFERENCES [dbo].[administrador] ([id_usuario])
+GO
+ALTER TABLE [dbo].[gallinas]  WITH CHECK ADD  CONSTRAINT [FK_gallinas_galpones] FOREIGN KEY([numero_galpon])
+REFERENCES [dbo].[galpones] ([numero_galpon])
+GO
+ALTER TABLE [dbo].[gallinas] CHECK CONSTRAINT [FK_gallinas_galpones]
+GO
+ALTER TABLE [dbo].[salud_gallinas]  WITH CHECK ADD  CONSTRAINT [FK_salud_gallinas] FOREIGN KEY([codigo_gallinas])
+REFERENCES [dbo].[gallinas] ([codigo_gallina])
+GO
+ALTER TABLE [dbo].[salud_gallinas] CHECK CONSTRAINT [FK_salud_gallinas]
+GO
+/****** Object:  StoredProcedure [dbo].[actualizar_admin]    Script Date: 23/07/2024 07:11:29 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[actualizar_admin](
+@id_usuario int, 
+@nombres varchar (50),
+@apellidos varchar (50),
+@edad int, 
+@direccion varchar (50),
+@telefono varchar (10),
+@correo varchar(50))
+as
+begin 
+update administrador set 
+nombres=@nombres,
+apellidos = @apellidos,
+edad=@edad,
+direccion=@direccion,
+ telefono = @telefono,
+ correo=@correo
+ where id_usuario = @id_usuario 
 end
 GO
-
-ALTER DATABASE [avicultura] SET ANSI_NULL_DEFAULT OFF 
+/****** Object:  StoredProcedure [dbo].[actualizar_avicultor]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
 GO
-
-ALTER DATABASE [avicultura] SET ANSI_NULLS OFF 
-GO
-
-ALTER DATABASE [avicultura] SET ANSI_PADDING OFF 
-GO
-
-ALTER DATABASE [avicultura] SET ANSI_WARNINGS OFF 
-GO
-
-ALTER DATABASE [avicultura] SET ARITHABORT OFF 
-GO
-
-ALTER DATABASE [avicultura] SET AUTO_CLOSE OFF 
-GO
-
-ALTER DATABASE [avicultura] SET AUTO_SHRINK OFF 
-GO
-
-ALTER DATABASE [avicultura] SET AUTO_UPDATE_STATISTICS ON 
-GO
-
-ALTER DATABASE [avicultura] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-
-ALTER DATABASE [avicultura] SET CURSOR_DEFAULT  GLOBAL 
-GO
-
-ALTER DATABASE [avicultura] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-
-ALTER DATABASE [avicultura] SET NUMERIC_ROUNDABORT OFF 
-GO
-
-ALTER DATABASE [avicultura] SET QUOTED_IDENTIFIER OFF 
-GO
-
-ALTER DATABASE [avicultura] SET RECURSIVE_TRIGGERS OFF 
-GO
-
-ALTER DATABASE [avicultura] SET  ENABLE_BROKER 
-GO
-
-ALTER DATABASE [avicultura] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-
-ALTER DATABASE [avicultura] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-
-ALTER DATABASE [avicultura] SET TRUSTWORTHY OFF 
-GO
-
-ALTER DATABASE [avicultura] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-
-ALTER DATABASE [avicultura] SET PARAMETERIZATION SIMPLE 
-GO
-
-ALTER DATABASE [avicultura] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-
-ALTER DATABASE [avicultura] SET HONOR_BROKER_PRIORITY OFF 
-GO
-
-ALTER DATABASE [avicultura] SET RECOVERY SIMPLE 
-GO
-
-ALTER DATABASE [avicultura] SET  MULTI_USER 
-GO
-
-ALTER DATABASE [avicultura] SET PAGE_VERIFY CHECKSUM  
-GO
-
-ALTER DATABASE [avicultura] SET DB_CHAINING OFF 
-GO
-
-ALTER DATABASE [avicultura] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-
-ALTER DATABASE [avicultura] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-
-ALTER DATABASE [avicultura] SET DELAYED_DURABILITY = DISABLED 
-GO
-
-ALTER DATABASE [avicultura] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-
-ALTER DATABASE [avicultura] SET QUERY_STORE = ON
-GO
-
-ALTER DATABASE [avicultura] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
-GO
-
-ALTER DATABASE [avicultura] SET  READ_WRITE 
+SET QUOTED_IDENTIFIER ON
 GO
 
 
+create procedure [dbo].[actualizar_avicultor](
+@id_usuario int, 
+@nombres varchar (50),
+@apellidos varchar (50),
+@edad int, 
+@direccion varchar (50),
+@telefono varchar (10),
+@correo varchar(50))
+as
+begin 
+update avicultor set 
+nombres=@nombres,
+apellidos = @apellidos,
+edad=@edad,
+direccion=@direccion,
+ telefono = @telefono,
+ correo=@correo
+ where id_usuario = @id_usuario 
+end
+GO
+/****** Object:  StoredProcedure [dbo].[actualizar_gallinas]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ create procedure [dbo].[actualizar_gallinas]
+ (
+ @codigo_gallina int, 
+@raza varchar (30),
+@edad int, 
+@numero_galpon int,
+@huevos_diarios int,
+@temp float,
+@esta_enferma varchar(2) ,
+@que_enfermedad varchar(30),
+@medicamentos varchar(100)
+)
+as
+begin
+update gallinas set 
+@raza=raza,
+@edad=edad,
+@numero_galpon=numero_galpon,
+@huevos_diarios=huevos_diarios
+where @codigo_gallina=codigo_gallina;
+
+update salud_gallinas set 
+@temp=temp,
+@esta_enferma=esta_enferma,
+@que_enfermedad=que_enfermedad,
+@medicamentos=medicamentos
+where @codigo_gallina=codigo_gallinas;
+end
+GO
+/****** Object:  StoredProcedure [dbo].[actualizar_galpones]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[actualizar_galpones](
+@numero_galpon int  ,
+@tipo_galpon varchar(30),
+@alimento_diario varchar(40) ,
+@que_alimento varchar(30) )
+as
+    UPDATE galpones 
+    SET 
+        tipo_galpon = @tipo_galpon,
+        huevos_diarios = (SELECT SUM(ga.huevos_diarios) FROM gallinas ga WHERE ga.numero_galpon = @numero_galpon),
+        numero_gallinas = (SELECT COUNT(ga.codigo_gallina) FROM gallinas ga WHERE ga.numero_galpon = @numero_galpon),
+        alimento_diario = @alimento_diario,
+        que_alimento = @que_alimento
+    WHERE 
+        numero_galpon = @numero_galpon;
+GO
+/****** Object:  StoredProcedure [dbo].[borrar_admin]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[borrar_admin]
+(@id_usuario int)
+as
+begin
+delete from administrador where id_usuario=@id_usuario
+end 
+GO
+/****** Object:  StoredProcedure [dbo].[borrar_avicultor]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[borrar_avicultor]
+(@id_usuario int)
+as
+begin
+delete from avicultor where id_usuario=@id_usuario
+end 
+GO
+/****** Object:  StoredProcedure [dbo].[borrar_gallinas]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ create procedure [dbo].[borrar_gallinas]
+ (@codigo_gallina int )
+ as
+ begin 
+ delete salud_gallinas where @codigo_gallina=codigo_gallinas
+ delete gallinas where @codigo_gallina=codigo_gallina
+ end
+GO
+/****** Object:  StoredProcedure [dbo].[borrar_galpones]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+create procedure  [dbo].[borrar_galpones]
+(@numero_galpon int)
+as
+delete galpones where numero_galpon=@numero_galpon
+GO
+/****** Object:  StoredProcedure [dbo].[consultar_admin]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[consultar_admin]
+(@id_usuario int)
+as
+begin 
+select * from administrador where id_usuario = @id_usuario
+end 
+GO
+/****** Object:  StoredProcedure [dbo].[consultar_avicultor]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[consultar_avicultor] 
+(@id_usuario int )
+as 
+begin 
+select * from avicultor where id_usuario= @id_usuario 
+end
+GO
+/****** Object:  StoredProcedure [dbo].[consultar_gallinas]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create procedure [dbo].[consultar_gallinas]
+(@codigo_gallina int)
+as 
+begin
+select 
+g.codigo_gallina , raza, edad,numero_galpon,  huevos_diarios, temp, esta_enferma, que_enfermedad,medicamentos
+from gallinas g
+inner join salud_gallinas s
+on g.codigo_gallina=s.codigo_gallinas
+where @codigo_gallina=g.codigo_gallina
+end
+GO
+/****** Object:  StoredProcedure [dbo].[consultar_galpones]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[consultar_galpones] 
+(@numero_galpon int)
+as 
+select * from galpones where numero_galpon=@numero_galpon
+GO
+/****** Object:  StoredProcedure [dbo].[ingresar_admin]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ingresar_admin]
+    @id_usuario VARCHAR(50),
+    @nombres VARCHAR(50),
+    @apellidos VARCHAR(50),
+    @edad INT,
+    @direccion VARCHAR(100),
+    @telefono VARCHAR(15),
+    @correo VARCHAR(50),
+    @contrasena VARCHAR(100) -- Nueva entrada para la contraseña en texto sin formato
+AS
+BEGIN
+    IF @id_usuario = '' OR @nombres = '' OR @apellidos = '' OR @direccion = '' OR @telefono = '' OR @correo = '' OR @contrasena = ''
+    BEGIN
+        -- Alguno de los campos está vacío, retorna un mensaje de error
+        RAISERROR('No se permiten campos vacíos', 16, 1);
+        RETURN;
+    END
+
+    -- Hashear la contraseña
+    DECLARE @hash_contrasena NVARCHAR(100);
+    SET @hash_contrasena = CONVERT(NVARCHAR(100), HASHBYTES('SHA2_256', @contrasena), 2);
+
+    -- Todos los campos tienen contenido, procede con la inserción
+    INSERT INTO Administrador (id_usuario, nombres, apellidos, edad, direccion, telefono, correo, contraseña)
+    VALUES (@id_usuario, @nombres, @apellidos, @edad, @direccion, @telefono, @correo, @hash_contrasena);
+
+    -- Inserción exitosa
+    SELECT 'Inserción exitosa' AS Resultado;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[ingresar_avicultor]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ingresar_avicultor]
+    @id_usuario VARCHAR(50),
+    @nombres VARCHAR(50),
+    @apellidos VARCHAR(50),
+    @edad INT,
+    @direccion VARCHAR(100),
+    @telefono VARCHAR(15),
+    @correo VARCHAR(50),
+    @contrasena VARCHAR(100) -- Nueva entrada para la contraseña en texto sin formato
+AS
+BEGIN
+    IF @id_usuario = '' OR @nombres = '' OR @apellidos = '' OR @direccion = '' OR @telefono = '' OR @correo = '' OR @contrasena = ''
+    BEGIN
+        -- Alguno de los campos está vacío, retorna un mensaje de error
+        RAISERROR('No se permiten campos vacíos', 16, 1);
+        RETURN;
+    END
+
+    -- Hashear la contraseña
+    DECLARE @hash_contrasena NVARCHAR(100);
+    SET @hash_contrasena = CONVERT(NVARCHAR(100), HASHBYTES('SHA2_256', @contrasena), 2);
+
+    -- Todos los campos tienen contenido, procede con la inserción
+    INSERT INTO avicultor(id_usuario, nombres, apellidos, edad, direccion, telefono, correo, contraseña)
+    VALUES (@id_usuario, @nombres, @apellidos, @edad, @direccion, @telefono, @correo, @hash_contrasena);
+
+    -- Inserción exitosa
+    SELECT 'Inserción exitosa' AS Resultado;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[ingresar_gallinas]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[ingresar_gallinas]
+(
+@codigo_gallina int, 
+@raza varchar (30),
+@edad int, 
+@numero_galpon int,
+@huevos_diarios int,
+@temp float,
+@esta_enferma varchar(2) ,
+@que_enfermedad varchar(30),
+@medicamentos varchar(100) 
+)
+as
+begin
+insert into gallinas values (@codigo_gallina,@raza,@edad,@numero_galpon,@huevos_diarios);
+insert into salud_gallinas values (@codigo_gallina,@temp,@esta_enferma,@que_enfermedad,@medicamentos);
+end 
+
+begin
+     UPDATE g
+    SET 
+        huevos_diarios = t.huevos_diarios,
+        numero_gallinas = t.numero_gallinas
+    FROM 
+        galpones g
+    INNER JOIN 
+    (
+        SELECT 
+            g.numero_galpon,
+            SUM(ga.huevos_diarios) AS huevos_diarios,
+            COUNT(ga.codigo_gallina) AS numero_gallinas
+        FROM 
+            galpones g
+        FULL JOIN 
+            gallinas ga ON g.numero_galpon = ga.numero_galpon
+        GROUP BY 
+            g.numero_galpon
+    ) t ON g.numero_galpon = t.numero_galpon;	
+end
+GO
+/****** Object:  StoredProcedure [dbo].[ingresar_galpones]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[ingresar_galpones](
+@numero_galpon int  ,
+@tipo_galpon varchar(30),
+@alimento_diario varchar (40) ,
+@que_alimento varchar (40))
+as
+insert into galpones (numero_galpon,tipo_galpon,huevos_diarios,numero_gallinas,alimento_diario,que_alimento) values (@numero_galpon,@tipo_galpon,0,0,@alimento_diario,@que_alimento)
+GO
+/****** Object:  StoredProcedure [dbo].[listar_admin]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[listar_admin] 
+as
+begin 
+select * from administrador
+end
+GO
+/****** Object:  StoredProcedure [dbo].[listar_avicultor]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[listar_avicultor] 
+as 
+begin
+select * from avicultor
+end
+GO
+/****** Object:  StoredProcedure [dbo].[listar_gallinas]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create procedure [dbo].[listar_gallinas]
+as
+select g.codigo_gallina , raza, edad,numero_galpon,  huevos_diarios, temp, esta_enferma, que_enfermedad,medicamentos  from gallinas g
+inner join salud_gallinas s
+on g.codigo_gallina=s.codigo_gallinas;
+GO
+/****** Object:  StoredProcedure [dbo].[listar_galpones]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[listar_galpones]
+as
+begin
+select g.numero_galpon,sum(ga.huevos_diarios) as huevos_diarios,tipo_galpon,count(ga.codigo_gallina)as numero_gallinas, alimento_diario,que_alimento from galpones g
+full join gallinas ga on g.numero_galpon=ga.numero_galpon
+group by g.numero_galpon,g.tipo_galpon,g.alimento_diario,g.que_alimento
+end
+begin
+     UPDATE g
+    SET 
+        huevos_diarios = t.huevos_diarios,
+        numero_gallinas = t.numero_gallinas
+    FROM 
+        galpones g
+    INNER JOIN 
+    (
+        SELECT 
+            g.numero_galpon,
+            SUM(ga.huevos_diarios) AS huevos_diarios,
+            COUNT(ga.codigo_gallina) AS numero_gallinas
+        FROM 
+            galpones g
+        FULL JOIN 
+            gallinas ga ON g.numero_galpon = ga.numero_galpon
+        GROUP BY 
+            g.numero_galpon
+    ) t ON g.numero_galpon = t.numero_galpon;	
+end
+GO
+/****** Object:  StoredProcedure [dbo].[verificar]    Script Date: 23/07/2024 07:11:30 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[verificar]
+    @id_usuario VARCHAR(50),
+    @contrasena_ingresada NVARCHAR(100)    -- Contraseña ingresada por el usuario (nueva, también hasheada)
+AS
+BEGIN
+    DECLARE @contrasena_almacenada NVARCHAR(100);
+
+    -- Obtener la contraseña almacenada en la base de datos para el usuario dado
+    SELECT @contrasena_almacenada = contraseña
+    FROM Administrador
+    WHERE id_usuario = @id_usuario;
+
+    IF @contrasena_almacenada IS NULL
+    BEGIN
+        -- El usuario no existe, o no tiene una contraseña almacenada
+        SELECT 'El usuario no existe o no tiene una contraseña almacenada' AS Resultado;
+        RETURN;
+    END
+
+    -- Hashear la contraseña ingresada para compararla con la almacenada
+    DECLARE @hash_contrasena_ingresada NVARCHAR(100);
+    SET @hash_contrasena_ingresada = CONVERT(NVARCHAR(100), HASHBYTES('SHA2_256', @contrasena_ingresada), 2);
+
+    IF @contrasena_almacenada = @hash_contrasena_ingresada
+    BEGIN
+        -- Las contraseñas son iguales
+        SELECT 'Las contraseñas coinciden' AS Resultado;
+    END
+    ELSE
+    BEGIN
+        -- Las contraseñas son diferentes
+        SELECT 'Las contraseñas no coinciden' AS Resultado;
+    END
+END;
+
+GO
